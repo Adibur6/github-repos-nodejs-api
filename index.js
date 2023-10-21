@@ -1,29 +1,35 @@
 const express = require('express');
-const axios = require('axios');
 const app = express();
-const PORT = process.env.PORT || 8081;
 
-app.get('/', async (req, res) => {
-  const username = req.query.username || 'myogeshchavan97';
-  try {
-    const result = await axios.get(
-      `https://api.github.com/users/${username}/repos`
-    );
-    const repos = result.data
-      .map((repo) => ({
-        name: repo.name,
-        url: repo.html_url,
-        description: repo.description,
-        stars: repo.stargazers_count
-      }))
-      .sort((a, b) => b.stars - a.stars);
+// Sample product data
+const products = [
+  {
+    name: 'Product 1',
+    price: 10.99,
+    unit: 'Piece',
+    availableAmount: 50,
+  },
+  {
+    name: 'Product 2',
+    price: 15.99,
+    unit: 'Piece',
+    availableAmount: 30,
+  },
+  {
+    name: 'Product 3',
+    price: 7.49,
+    unit: 'Piece',
+    availableAmount: 75,
+  },
+];
 
-    res.send(repos);
-  } catch (error) {
-    res.status(400).send('Error while getting list of repositories');
-  }
+// Define a route to get the product list
+app.get('/products', (req, res) => {
+  res.json(products);
 });
 
-app.listen(PORT, () => {
-  console.log(`server started on port ${PORT}`);
+// Start the server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
